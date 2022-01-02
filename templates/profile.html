@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="container">
+    Welcome, {{ user.name }}! </br>
+    Details: </br>
+    <div id="email">{{user.email}}</div>
+    </br> <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Modifier ses informations
+    </button>
+
+</h1>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Nouveau email : <input type="email" name="nouveau_email" id="nouveau_email">
+                <div class="alert alert-danger" role="alert" id="erreurs_email" style="display: none">
+                    Une erreur est survecu, veuillez ressayer plus tard.
+                </div>
+                <div class="alert alert-success" role="alert" id="succes_email" style="display: none">
+                    Votre email a ete bien modifier, veuillez l'utiliser pour vos prochaines connexions.
+                </div>
+
+
+                <button type="button" class="btn_primary" onclick="modifierEmail()">Enregistrer</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+    function modifierEmail() {
+        value = $("#nouveau_email").val();
+
+        $.ajax({
+            url: "/edit/email",
+            type: "post",
+            data: {"nouveau_email": value},
+            success: function (response) {
+                $('#email').html(value);
+                $('#succes_email').show()
+                $("#nouveau_email").val("");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#erreurs_email').show()
+                $('#succes_email').hide()
+            }
+        });
+    }
+</script>
+
+{% endblock %}
